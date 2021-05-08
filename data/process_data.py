@@ -1,44 +1,71 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri May  7 12:28:09 2021
-
-@author: arshl
-"""
-
-# import libraries
 import sys
 import pandas as pd
-import numpy as np
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    '''
+    Parameters
+    ----------
+    messages_filepath : str
+        Path to text or csv file with message inputs.
+    categories_filepath : str
+        Path to text or csv file with category outputs.
+
+    Returns
+    -------
+    df : pandas.DataFrame
+        Dataframe of merged message and category data from specified files.
+    '''
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     df = pd.merge(messages, categories, how = 'inner', on = 'id')
     return df
 
 def clean_data(df):
+    '''
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Dataframe of message and category data. Output from load_data().
+
+    Returns
+    -------
+    df : pandas.DataFrame
+        Cleaned dataframe with duplicates removed and categories in columns.
+    '''
     categories = df['categories'].str.split(';', expand=True)
     row = categories.iloc[0]
     category_colnames = row.apply(lambda x: x[:-2])
     categories.columns = category_colnames
     for column in categories:
-        # set each value to be the last character of the string
+        # set each value to be the last character of the string (numeric value)
         categories[column] = categories[column].apply(lambda x: x[-1])
-        # convert column from string to numeric
+        # convert column from string to integer
         categories[column] = categories[column].astype(int)
     df = df.drop('categories', axis=1)
     df = pd.concat([df, categories], axis=1)
     df = df.drop_duplicates()
-    df = df[~df['related'].isna()]
     print(str('{} duplicates after cleaning.').format(df.duplicated().sum()))
     print(str('{} missing category values after cleaning.').format(categories.isnull().sum().sum()))
-    df.head()
     return df
 
 def save_data(df, database_filename):
+    '''
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Dataframe to save to SQL database. Output from clean_data().
+    database_filename : str
+        Location to save database file to.
+
+    Returns
+    -------
+    None.
+    Saves input dataframe to specified SQL database.
+    '''
     engine = create_engine('sqlite:///'+database_filename)
-    df.to_sql('mess', engine, index=False, if_exists='replace')
+    # saves to 'messages' table by default
+    df.to_sql('messages', engine, index=False, if_exists='replace')
     
 def main():
     if len(sys.argv) == 4:

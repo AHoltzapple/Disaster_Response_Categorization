@@ -1,29 +1,35 @@
 import json
 import plotly
 import pandas as pd
-
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
-
 from flask import Flask
-from flask import render_template, request, jsonify
+from flask import render_template, request
 from plotly.graph_objs import Bar
 import joblib
 from sqlalchemy import create_engine
 
-
-
 app = Flask(__name__)
 
 def tokenize(text):
+    '''
+    Parameters
+    ----------
+    text : str
+        Message text to tokenize.
+
+    Returns
+    -------
+    clean_tokens : list
+        List of clean word tokens from the original message input.
+    '''    
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
-
     clean_tokens = []
+    # lemmatize, clean, and collect cleaned tokens in new list
     for tok in tokens:
         clean_tok = lemmatizer.lemmatize(tok).lower().strip()
         clean_tokens.append(clean_tok)
-
     return clean_tokens
 
 # load data
@@ -33,14 +39,22 @@ df = pd.read_sql_table('mess', engine)
 # load model
 model = joblib.load("../models/classifier.pkl")
 
-
-# index webpage displays cool visuals and receives user input text for model
+# index webpage displays visuals and receives user input text for model
 @app.route('/')
 @app.route('/index')
 def index():
+    '''
+    Parameters
+    -------
+    None.
+
+    Returns
+    -------
+    None.
+    Creates and renders /index page for visuals and input text.
     
+    '''
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     categories = df[df.columns[4:]]
@@ -48,7 +62,7 @@ def index():
     cat_names = list(categories.columns)
     
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
+    # creates bar chart for message genre and category distributions
     graphs = [
         {
             'data': [
@@ -102,6 +116,16 @@ def index():
 # web page that handles user query and displays model results
 @app.route('/go')
 def go():
+    '''
+    Parameters
+    -------
+    None.
+
+    Returns
+    -------
+    None.
+    Creates and renders /go page for model results of input text.
+    '''
     # save user input in query
     query = request.args.get('query', '') 
 
