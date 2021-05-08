@@ -12,6 +12,7 @@ import joblib
 from sqlalchemy import create_engine
 
 
+
 app = Flask(__name__)
 
 def tokenize(text):
@@ -26,11 +27,11 @@ def tokenize(text):
     return clean_tokens
 
 # load data
-engine = create_engine('sqlite:///../data/messagesdf.db')
+engine = create_engine('sqlite:///../data/DisasterResponse.db')
 df = pd.read_sql_table('mess', engine)
 
 # load model
-model = joblib.load("../models/disaster_response_pipeline.pkl")
+model = joblib.load("../models/classifier.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -42,6 +43,9 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+    categories = df[df.columns[4:]]
+    cat_values = categories.sum().sort_values(ascending=False)
+    cat_names = list(categories.columns)
     
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
@@ -61,6 +65,27 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=cat_names,
+                    y=cat_values
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Message Categories',
+                'yaxis': {
+                    'automargin': True,
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'automargin': True,
+                    'title': "Category",
+                    'tickangle': -60
                 }
             }
         }
@@ -93,7 +118,7 @@ def go():
 
 
 def main():
-    app.run(host='localhost', port=3001, debug=True)
+    app.run(host='0.0.0.0', port=3001, debug=True)
 
 
 if __name__ == '__main__':
