@@ -7,10 +7,7 @@ nltk.download(['punkt', 'wordnet'])
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from sklearn.multioutput import MultiOutputClassifier
-
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.linear_model import LogisticRegression
-
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 import sklearn.metrics as skm
 from sklearn.model_selection import train_test_split
@@ -80,7 +77,7 @@ def build_model():
     model = Pipeline([
     ('vect', CountVectorizer(tokenizer=tokenize)),
     ('tfidf', TfidfTransformer()),
-    ('clf', MultiOutputClassifier(KNeighborsClassifier()))
+    ('clf', MultiOutputClassifier(RandomForestClassifier()))
     ])
     return model
 
