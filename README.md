@@ -31,7 +31,7 @@ The resulting model is a multi-output classifier, outputting results of a given 
 
 3. Open command prompt in the root folder (../Disaster_Response_Categorization or other export location) enter 'python ./app/run.py'.
 
-4. Go to http://0.0.0.0:3001/ (localhost:3001) or in your browser.
+4. Go to http://0.0.0.0:3001/ or [localhost:3001](localhost:3001) in your browser.
 
 5. Enter message text, click [Classify Message] to see category output.
 
