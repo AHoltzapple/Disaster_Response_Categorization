@@ -45,6 +45,10 @@ def clean_data(df):
     df = df.drop('categories', axis=1)
     df = pd.concat([df, categories], axis=1)
     df = df.drop_duplicates()
+    # related column has some rows with value of 2, information on the meaning
+    # of this value is not available, therefore those rows are dropped to
+    # maintain binary data in all categories
+    df = df.loc[df['related'] != 2]
     print(str('{} duplicates after cleaning.').format(df.duplicated().sum()))
     print(str('{} missing category values after cleaning.').format(categories.isnull().sum().sum()))
     return df

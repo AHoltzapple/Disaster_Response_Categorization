@@ -12,6 +12,7 @@ from sklearn.pipeline import Pipeline
 import sklearn.metrics as skm
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.model_selection import GridSearchCV
 import pickle
 
 def load_data(database_filepath):
@@ -74,11 +75,17 @@ def build_model():
         Model pipeline for fitting to input data.
     '''    
     # modify model pipeline here
+    classifier = MultiOutputClassifier(RandomForestClassifier())
+    parameters = {
+        'estimator__n_estimators': [50, 75, 100],
+        'estimator__max_features': ['auto','sqrt','log2']
+        }
     model = Pipeline([
     ('vect', CountVectorizer(tokenizer=tokenize)),
     ('tfidf', TfidfTransformer()),
-    ('clf', MultiOutputClassifier(RandomForestClassifier()))
+    ('clf', GridSearchCV(estimator = classifier, param_grid = parameters))
     ])
+    
     return model
 
 def evaluate_model(model, X_test, Y_test, category_names):
