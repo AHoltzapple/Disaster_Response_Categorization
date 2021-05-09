@@ -58,8 +58,8 @@ Below is an example of how main page of the web app will appear:
 
 ## Acknowledgements
 
-* Data provided by [Figure Eight] (https://www.figure-eight.com/)
-* Flask web app template and python script templates provided by [Udacity] (https://www.udacity.com/) as part of the [Data Scientist] (https://www.udacity.com/course/data-scientist-nanodegree--nd025) nanodegree program
-* [Natural Language Toolkit (NLTK)] (https://www.nltk.org/) - library for natural language processing
-* [Scikit-Learn] (https://scikit-learn.org/stable/) - model development and evaluation
-* [Pandas] (https://pandas.pydata.org/) - data cleaning and preparation
+* Data provided by [Figure Eight](https://www.figure-eight.com/)
+* Flask web app template and python script templates provided by [Udacity](https://www.udacity.com/) as part of the [Data Scientist](https://www.udacity.com/course/data-scientist-nanodegree--nd025) nanodegree program
+* [Natural Language Toolkit (NLTK)](https://www.nltk.org/) - library for natural language processing
+* [Scikit-Learn](https://scikit-learn.org/stable/) - model development and evaluation
+* [Pandas](https://pandas.pydata.org/) - data cleaning and preparation
